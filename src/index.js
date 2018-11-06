@@ -70,10 +70,9 @@ todoFormEl.addEventListener('submit', async e => {
     body,
     complete: false
   })
-  if (res.status === 201) {
-    drawTodoList()
-  }
+  drawTodoList()
 })
+
 
 list.forEach(todoItem => {
   // 1. 템플릿 복사하기
@@ -81,6 +80,17 @@ list.forEach(todoItem => {
 
   // 2. 내용 채우고 이벤트 리스너 등록하기
   const bodyEl = fragment.querySelector('.body')
+  const deleteEl = fragment.querySelector('.delete')
+
+  bodyEl.textContent = todoItem.body
+
+  deleteEl.addEventListener('click', async e => {
+
+    // 삭제 요청 보내기
+    await api.delete('/todos/' + todoItem.id)
+    // 성공 시 할 일 목록 다시 그리기
+    drawTodoList()
+  })
 
   bodyEl.textContent = todoItem.body
 
