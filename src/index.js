@@ -77,13 +77,18 @@ logoutEl.addEventListener('click', e => {
 })
 
 todoFormEl.addEventListener('submit', async e => {
+  document.body.classList.add('loading')
   e.preventDefault()
   const body = e.target.elements.body.value
   const res = await api.post('/todos', {
     body,
     complete: false
   })
-  drawTodoList()
+  // 비동기함수를 실행시키면 promise가 반환되고
+  // drawTodoList 함수의 실행이 끝날 때까지 기다림
+  // promise에는 undefinde가 채워짐
+  await drawTodoList()
+  document.body.classList.remove('loading')
 })
 
 
@@ -104,7 +109,8 @@ list.forEach(todoItem => {
   bodyEl.textContent = todoItem.body
 
   completeEl.addEventListener('click', async e => {
-    e.preventDefault()
+    // 주석을 풀면 비관적 업데이트 방식으로 변함
+    // e.preventDefault()
     await api.patch('/todos/' + todoItem.id, {
       complete: !todoItem.complete
     })
