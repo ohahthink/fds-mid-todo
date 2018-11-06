@@ -53,6 +53,7 @@ function drawLoginForm() {
   rootEl.appendChild(fragment)
 }
 
+
 async function drawTodoList() {
   const res = await api.get('/todos')
   const list = res.data
@@ -93,8 +94,22 @@ list.forEach(todoItem => {
   // 2. 내용 채우고 이벤트 리스너 등록하기
   const bodyEl = fragment.querySelector('.body')
   const deleteEl = fragment.querySelector('.delete')
+  const completeEl = fragment.querySelector('.complete')
+
+  if (todoItem.complete) {
+    // checked, disabled, contenteditable (= boolean 빈 어트리뷰트)
+    completeEl.setAttribute('checked', '')
+  }
 
   bodyEl.textContent = todoItem.body
+
+  completeEl.addEventListener('click', async e => {
+    e.preventDefault()
+    await api.patch('/todos/' + todoItem.id, {
+      complete: !todoItem.complete
+    })
+    drawTodoList()
+  })
 
   deleteEl.addEventListener('click', async e => {
 
