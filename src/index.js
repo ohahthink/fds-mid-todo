@@ -49,6 +49,7 @@ function drawLoginForm() {
   })
 
   // 3. 문서 내부에 삽입하기
+  rootEl.textContent = ''
   rootEl.appendChild(fragment)
 }
 
@@ -62,6 +63,17 @@ const fragment = document.importNode(templates.todoList, true)
 // 2. 내용 채우고 이벤트 리스너 등록하기
 const todoListEl = fragment.querySelector('.todo-list')
 const todoFormEl = fragment.querySelector('.todo-form')
+const logoutEl = fragment.querySelector('.logout')
+
+// 비동기 작업을 할 일이 없기 때문에 async를 사용하지 않음
+// 서버로 무언가 보낼 일이 없기 때문
+logoutEl.addEventListener('click', e => {
+  // 로그아웃 절차
+  // 1. 토큰 삭제
+  localStorage.removeItem('token')
+  // 2. 로그인 폼 보여주기
+  drawLoginForm()
+})
 
 todoFormEl.addEventListener('submit', async e => {
   e.preventDefault()
